@@ -40,7 +40,7 @@ def SendShortMessage(phone_number, text_message):
     if 1 == answer:
         ser.write(text_message.encode())
         ser.write(b'\x1A')
-        answer = send_at('', 'OK', 20)
+        answer = send_at('', 'OK', 5)
         if 1 == answer:
             print('send successfully')
         else:
@@ -66,9 +66,20 @@ def power_down(power_key):
     GPIO.output(power_key, GPIO.HIGH)
     time.sleep(3)
     GPIO.output(power_key, GPIO.LOW)
-    time.sleep(18)
+    time.sleep(1)
     print('Good bye')
 
-power_on(power_key)
-SendShortMessage(phone_number, text_message)
-time.sleep(4)
+#power_on(power_key)
+#SendShortMessage(phone_number, text_message)
+#time.sleep(4)
+
+
+try:    
+    power_on(power_key)
+    SendShortMessage(phone_number,text_message)
+    power_down(power_key)
+    print('Action completed')
+except :
+	if ser != None:
+		ser.close()
+	GPIO.cleanup()
