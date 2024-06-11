@@ -1,1 +1,5 @@
+Following commands run the described scripts:
 
+python Teleflow_RX.py --ca_file ~/certs/Amazon-root-CA-1.pem --cert ~/certs/device.pem.crt --key ~/certs/private.pem.key --endpoint a18x95s9fmfvn1-ats.iot.us-east-2.amazonaws.com  
+
+python Teleflow_TX.py --ca_file ~/certs/Amazon-root-CA-1.pem --cert ~/certs/device.pem.crt --key ~/certs/private.pem.key --endpoint a18x95s9fmfvn1-ats.iot.us-east-2.amazonaws.com --topic data
