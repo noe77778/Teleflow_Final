@@ -14,7 +14,7 @@ from utils.command_line_utils import CommandLineUtils
 # Global Variables
 SerialDone = False
 id_counter = 0
-serial_port = "/dev/ttyUSB0"
+serial_port = "/dev/ttyUSB5"
 baudrate = 115200
 csv_file_path = 'power_consumption_log.csv'
 counter_file_path = '/home/chaca/aws-iot-device-sdk-python-v2/samples/id_counter.txt'
@@ -196,7 +196,7 @@ def read_INA219_serial():
 
         buffer = []
         start_time = datetime.now()
-        end_time = start_time + timedelta(minutes=1)  # Reading for 1 minute
+        end_time = start_time + timedelta(minutes=10)  # Reading for 1 minute
 
         while datetime.now() < end_time:
             data = read_serial_data(ser)
@@ -249,6 +249,7 @@ def publish_messages(mqtt_connection, topic):
                         qos=mqtt.QoS.AT_LEAST_ONCE)
                     
                     ## 
+                    time.sleep(0.1)
 
                     messageB = {
                         "id": str(id_counter+1000),
@@ -264,8 +265,27 @@ def publish_messages(mqtt_connection, topic):
                         topic=topic,
                         payload=message_jsonB,
                         qos=mqtt.QoS.AT_LEAST_ONCE)
+                    
+                    ## 
+                    time.sleep(0.1)
+                    messageC = {
+                        "id": str(id_counter+10000),
+                        "date": datetime.now().strftime("%b %d %H:%M"),  # Month, day, hours, and minutes
+                        "disconnectionDate": "",
+                        "myState": "",
+                        "powerConsumption": pandas_results['avg_voltage'],  # Average power consumption
+                        "reconnectionDate": ""
+                    }
+                    print(f"Publishing message to topic '{topic}': {messageC}")
+                    message_jsonC = json.dumps(messageC)
+                    mqtt_connection.publish(
+                        topic=topic,
+                        payload=message_jsonC,
+                        qos=mqtt.QoS.AT_LEAST_ONCE)
+                    time.sleep(0.1)
                     id_counter += 1
                     SerialDone = False  # Reset SerialDone after publishing
+                    time.sleep(0.1)
                 else:
                     print("No data to publish")
             time.sleep(0.1)
