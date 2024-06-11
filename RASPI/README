@@ -1,0 +1,15 @@
+Useful commands 
+
+
+AT+CPMS="SM","SM","SM"
+
+AT+CMGD=,4
+
+
+
+source .venv/bin/activate
+python3 -m venv .venv
+
+
+
+sudo minicom -D /dev/ttyUSB2
